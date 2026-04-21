@@ -22,7 +22,9 @@ if (isset($_POST['submit'])) {
         );
       }
 
-      create_user($conn, $r['user_name'], $r['user_email'], $r['user_phone'], $res['branch_id']);
+      else {
+        create_user($conn, $r['user_name'], $r['user_email'], $r['user_phone'], $res['branch_id']);
+      }
     }
 
     else if ($res = area_exists($conn, $r['region_name'], $r['area_name'])) {
@@ -38,7 +40,9 @@ if (isset($_POST['submit'])) {
         );
       }
 
-      create_user($conn, $r['user_name'], $r['user_email'], $r['user_phone'], $branch_id);
+      else {
+        create_user($conn, $r['user_name'], $r['user_email'], $r['user_phone'], $branch_id);
+      }
     }
 
     else if ($res = region_exists($conn, $r['region_name'])) {
@@ -55,7 +59,9 @@ if (isset($_POST['submit'])) {
         );
       }
 
-      create_user($conn, $r['user_name'], $r['user_email'], $r['user_phone'], $branch_id);
+      else {
+        create_user($conn, $r['user_name'], $r['user_email'], $r['user_phone'], $branch_id);
+      }
     }
 
     else {
@@ -73,7 +79,9 @@ if (isset($_POST['submit'])) {
         );
       }
 
-      create_user($conn, $r['user_name'], $r['user_email'], $r['user_phone'], $branch_id);
+      else {
+        create_user($conn, $r['user_name'], $r['user_email'], $r['user_phone'], $branch_id);
+      }
     }
   }
 
