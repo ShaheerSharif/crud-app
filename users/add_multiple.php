@@ -11,17 +11,50 @@ if (isset($_POST['submit'])) {
 
   foreach ($rows as $r) {
     if ($res = branch_exists($conn, $r['region_name'], $r['area_name'], $r['branch_name'])) {
+
+      if ($user_id = email_exists($conn, $r['user_email'])) {
+        update_user_all_except_email(
+          $conn,
+          $user_id,
+          $r['user_name'],
+          $r['user_phone'],
+          $res['branch_id']
+        );
+      }
+
       create_user($conn, $r['user_name'], $r['user_email'], $r['user_phone'], $res['branch_id']);
     }
 
     else if ($res = area_exists($conn, $r['region_name'], $r['area_name'])) {
       $branch_id = create_branch($conn, $r['branch_name'], $res['area_id']);
+
+      if ($user_id = email_exists($conn, $r['user_email'])) {
+        update_user_all_except_email(
+          $conn,
+          $user_id,
+          $r['user_name'],
+          $r['user_phone'],
+          $branch_id
+        );
+      }
+
       create_user($conn, $r['user_name'], $r['user_email'], $r['user_phone'], $branch_id);
     }
 
     else if ($res = region_exists($conn, $r['region_name'])) {
       $area_id = create_area($conn, $r['area_name'], $res['region_id']);
       $branch_id = create_branch($conn, $r['branch_name'], $area_id);
+
+      if ($user_id = email_exists($conn, $r['user_email'])) {
+        update_user_all_except_email(
+          $conn,
+          $user_id,
+          $r['user_name'],
+          $r['user_phone'],
+          $branch_id
+        );
+      }
+
       create_user($conn, $r['user_name'], $r['user_email'], $r['user_phone'], $branch_id);
     }
 
@@ -29,6 +62,17 @@ if (isset($_POST['submit'])) {
       $region_id = create_region($conn, $r['region_name']);
       $area_id = create_area($conn, $r['area_name'], $region_id);
       $branch_id = create_branch($conn, $r['branch_name'], $area_id);
+
+      if ($user_id = email_exists($conn, $r['user_email'])) {
+        update_user_all_except_email(
+          $conn,
+          $user_id,
+          $r['user_name'],
+          $r['user_phone'],
+          $branch_id
+        );
+      }
+
       create_user($conn, $r['user_name'], $r['user_email'], $r['user_phone'], $branch_id);
     }
   }
