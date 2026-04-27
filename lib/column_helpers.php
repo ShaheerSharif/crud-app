@@ -1,5 +1,7 @@
 <?php
 
+include("../config/aliases.php");
+
 function col_exists($conn, $table, $col) {
   $q = mysqli_query($conn, "
     SELECT COUNT(*) AS cnt
@@ -22,14 +24,7 @@ function add_column($conn, $table, $col, $datatype='VARCHAR(255)', $nullable=tru
   mysqli_query($conn, "ALTER TABLE `$table` ADD COLUMN `$col` $datatype $null_sql");
 }
 
-function identify_relevant_table($conn, $col) {
-  $aliasTable = [
-    'users'    => ['user_', 'user'],
-    'branches' => ['branch_', 'branch'],
-    'areas'    => ['area_', 'area'],
-    'regions'  => ['region_', 'region'],
-  ];
-
+function identify_relevant_table($conn, $col, $aliasTable) {
   foreach ($aliasTable as $table => $aliases) {
     foreach ($aliases as $a) {
       // check if column starts with alias

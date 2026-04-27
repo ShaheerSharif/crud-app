@@ -1,5 +1,6 @@
 <?php
 include("../config/db.php");
+include("../config/aliases.php");
 include("../includes/styles.php");
 include("../lib/column_helpers.php");
 include("../lib/csv_parser.php");
@@ -21,7 +22,7 @@ if (isset($_POST['submit'])) {
   }
 
   foreach ($colNames as $c) {
-    $arr = identify_relevant_table($conn, $c);
+    $arr = identify_relevant_table($conn, $c, $aliasTable);
     $table = $arr['table'];
 
     if ($table) {
