@@ -3,7 +3,7 @@ include("../config/db.php");
 include("../config/aliases.php");
 include("../includes/styles.php");
 include("../lib/column_helpers.php");
-include("../lib/csv_helper.php");
+include("../lib/csv_helpers.php");
 include("../lib/location_data.php");
 include("../lib/logging.php");
 include("../lib/user.php");
@@ -39,7 +39,6 @@ if (isset($_POST['submit'])) {
       foreach ($rows as &$r) {
         unset($r[$c]);
       }
-      unset($r);
     }
   }
 
