@@ -47,14 +47,13 @@ if (isset($_POST['submit'])) {
         update_user_all_except_email(
           $conn,
           $user_id,
-          $r['user_name'],
-          $r['user_phone'],
-          $res['branch_id']
+          $res['branch_id'],
+          $r
         );
       }
 
       else {
-        create_user($conn, $r['user_name'], $r['user_email'], $r['user_phone'], $res['branch_id']);
+        create_user($conn, $r['user_email'], $res['branch_id'], $r);
       }
     }
 
@@ -65,14 +64,13 @@ if (isset($_POST['submit'])) {
         update_user_all_except_email(
           $conn,
           $user_id,
-          $r['user_name'],
-          $r['user_phone'],
-          $branch_id
+          $branch_id,
+          $r
         );
       }
 
       else {
-        create_user($conn, $r['user_name'], $r['user_email'], $r['user_phone'], $branch_id);
+        create_user($conn, $r['user_email'], $branch_id, $r);
       }
     }
 
@@ -84,14 +82,13 @@ if (isset($_POST['submit'])) {
         update_user_all_except_email(
           $conn,
           $user_id,
-          $r['user_name'],
-          $r['user_phone'],
-          $branch_id
+          $branch_id,
+          $r
         );
       }
 
       else {
-        create_user($conn, $r['user_name'], $r['user_email'], $r['user_phone'], $branch_id);
+        create_user($conn, $r['user_email'], $branch_id, $r);
       }
     }
 
@@ -104,14 +101,13 @@ if (isset($_POST['submit'])) {
         update_user_all_except_email(
           $conn,
           $user_id,
-          $r['user_name'],
-          $r['user_phone'],
-          $branch_id
+          $branch_id,
+          $r
         );
       }
 
       else {
-        create_user($conn, $r['user_name'], $r['user_email'], $r['user_phone'], $branch_id);
+        create_user($conn, $r['user_email'], $branch_id, $r);
       }
     }
   }
