@@ -1,7 +1,5 @@
 <?php
 
-include("../config/aliases.php");
-
 function col_exists($conn, $table, $col) {
   $q = mysqli_query($conn, "
     SELECT COUNT(*) AS cnt
