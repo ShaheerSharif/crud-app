@@ -150,3 +150,63 @@ function create_region($conn, $region_name, $fields) {
   $region_id = mysqli_insert_id($conn);
   return $region_id;
 }
+
+function update_optional_branch_fields($conn, $branch_id, $fields) {
+  $prefix = 'branch_';
+  $exclude = ['branch_id', 'branch_name'];
+
+  $fields = filter_keys_starting_with($fields, $prefix);
+  $fields = filter_all_keys_except($fields, $exclude);
+
+  $sqlParts = [];
+
+  foreach ($fields as $key => $val) {
+    $sqlParts[] = "`$key`='$val'";
+  }
+
+  $sql = implode(', ', $sqlParts);
+
+  if ($sql !== '') {
+    mysqli_query($conn, "UPDATE branches SET $sql WHERE branch_id=$branch_id");
+  }
+}
+
+function update_optional_area_fields($conn, $area_id, $fields) {
+  $prefix = 'area_';
+  $exclude = ['area_id', 'area_name'];
+
+  $fields = filter_keys_starting_with($fields, $prefix);
+  $fields = filter_all_keys_except($fields, $exclude);
+
+  $sqlParts = [];
+
+  foreach ($fields as $key => $val) {
+    $sqlParts[] = "`$key`='$val'";
+  }
+
+  $sql = implode(', ', $sqlParts);
+
+  if ($sql !== '') {
+    mysqli_query($conn, "UPDATE areas SET $sql WHERE area_id=$area_id");
+  }
+}
+
+function update_optional_region_fields($conn, $region_id, $fields) {
+  $prefix = 'region_';
+  $exclude = ['region_id', 'region_name'];
+
+  $fields = filter_keys_starting_with($fields, $prefix);
+  $fields = filter_all_keys_except($fields, $exclude);
+
+  $sqlParts = [];
+
+  foreach ($fields as $key => $val) {
+    $sqlParts[] = "`$key`='$val'";
+  }
+
+  $sql = implode(', ', $sqlParts);
+
+  if ($sql !== '') {
+    mysqli_query($conn, "UPDATE regions SET $sql WHERE region_id=$region_id");
+  }
+}
