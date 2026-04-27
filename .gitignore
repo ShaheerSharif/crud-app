@@ -2,6 +2,9 @@
 /vendor/
 /node_modules/
 
+# Logs
+logs/
+
 # Environment and Secrets
 .env
 config.php

@@ -5,6 +5,7 @@ include("../includes/styles.php");
 include("../lib/column_helpers.php");
 include("../lib/csv_parser.php");
 include("../lib/location_data.php");
+include("../lib/logging.php");
 include("../lib/user.php");
 
 if (isset($_POST['submit'])) {
@@ -33,6 +34,8 @@ if (isset($_POST['submit'])) {
 
     // if relevant table does not exist then remove from rows
     else {
+      sql_log('add_multiple', "Column name ($c) couldn't be mapped to any table");
+
       foreach ($rows as &$r) {
         unset($r[$c]);
       }
