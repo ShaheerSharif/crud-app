@@ -1,13 +1,43 @@
 <?php
 include("../config/db.php");
 include("../includes/styles.php");
+include("../lib/column_helpers.php");
 include("../lib/csv_parser.php");
 include("../lib/location_data.php");
 include("../lib/user.php");
 
 if (isset($_POST['submit'])) {
   $filename = $_FILES["file"]["tmp_name"];
-  $rows = csv_to_arr($filename);
+  $data = csv_to_arr($filename);
+  $rows = $data['rows'];
+  $colNames = $data['headers'];
+
+  $needles = ['user_name', 'user_email', 'branch_name', 'area_name', 'region_name'];
+
+  // check if csv file has mandatory columns
+  if (!empty(array_diff($needles, $colNames))) {
+    echo "<script>alert('Missing relevant columns.');</script>";
+    exit;
+  }
+
+  foreach ($colNames as $c) {
+    $arr = identify_relevant_table($conn, $c);
+    $table = $arr['table'];
+
+    if ($table) {
+      if (!$arr['exists']) {
+        add_column($conn, $table, $c);
+      }
+    }
+
+    // if relevant table does not exist then remove from rows
+    else {
+      foreach ($rows as &$r) {
+        unset($r[$c]);
+      }
+      unset($r);
+    }
+  }
 
   foreach ($rows as $r) {
     if ($res = branch_exists($conn, $r['region_name'], $r['area_name'], $r['branch_name'])) {
@@ -85,7 +115,7 @@ if (isset($_POST['submit'])) {
     }
   }
 
-  header("Location: ../");
+  // header("Location: ../");
 }
 ?>
 

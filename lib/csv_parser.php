@@ -20,5 +20,9 @@ function csv_to_arr($filename) {
   }
 
   fclose($handle);
-  return $data;
+
+  return [
+    'headers' => $headers,
+    'rows' => $data
+  ];
 }
