@@ -58,7 +58,7 @@ if (isset($_POST['submit'])) {
     }
 
     else if ($res = area_exists($conn, $r['region_name'], $r['area_name'])) {
-      $branch_id = create_branch($conn, $r['branch_name'], $res['area_id']);
+      $branch_id = create_branch($conn, $r['branch_name'], $res['area_id'], $r);
 
       if ($user_id = email_exists($conn, $r['user_email'])) {
         update_user_all_except_email(
@@ -75,8 +75,8 @@ if (isset($_POST['submit'])) {
     }
 
     else if ($res = region_exists($conn, $r['region_name'])) {
-      $area_id = create_area($conn, $r['area_name'], $res['region_id']);
-      $branch_id = create_branch($conn, $r['branch_name'], $area_id);
+      $area_id = create_area($conn, $r['area_name'], $res['region_id'], $r);
+      $branch_id = create_branch($conn, $r['branch_name'], $area_id, $r);
 
       if ($user_id = email_exists($conn, $r['user_email'])) {
         update_user_all_except_email(
@@ -93,9 +93,9 @@ if (isset($_POST['submit'])) {
     }
 
     else {
-      $region_id = create_region($conn, $r['region_name']);
-      $area_id = create_area($conn, $r['area_name'], $region_id);
-      $branch_id = create_branch($conn, $r['branch_name'], $area_id);
+      $region_id = create_region($conn, $r['region_name'], $r);
+      $area_id = create_area($conn, $r['area_name'], $region_id, $r);
+      $branch_id = create_branch($conn, $r['branch_name'], $area_id, $r);
 
       if ($user_id = email_exists($conn, $r['user_email'])) {
         update_user_all_except_email(
@@ -112,7 +112,7 @@ if (isset($_POST['submit'])) {
     }
   }
 
-  // header("Location: ../");
+  header("Location: ../");
 }
 ?>
 
