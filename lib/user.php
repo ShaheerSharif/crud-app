@@ -68,7 +68,7 @@ function update_user_all_except_email($conn, $user_id, $branch_id, $fields) {
 }
 
 function email_exists($conn, $user_email) {
-  $q = mysqli_query($conn, "SELECT user_id FROM users WHERE user_email='$user_email'");
+  $q = mysqli_query($conn, "SELECT user_id FROM users WHERE user_email='$user_email' LIMIT 1");
   $res = $q->fetch_assoc();
 
   return $res['user_id'];

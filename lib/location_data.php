@@ -17,7 +17,8 @@ function branch_exists($conn, $region_name, $area_name, $branch_name) {
     AND
       areas.area_name LIKE '$area_name'
     AND
-      branches.branch_name LIKE '$branch_name' 
+      branches.branch_name LIKE '$branch_name'
+    LIMIT 1
   ");
 
   $res = $q->fetch_assoc();
@@ -39,6 +40,7 @@ function area_exists($conn, $region_name, $area_name) {
       regions.region_name LIKE '$region_name'
     AND
       areas.area_name LIKE '$area_name'
+    LIMIT 1
   ");
 
   $res = $q->fetch_assoc();
@@ -50,7 +52,7 @@ function area_exists($conn, $region_name, $area_name) {
  * Checks if region exists. Returns region id if exists.
  */
 function region_exists($conn, $region_name) {
-  $q = mysqli_query($conn, "SELECT region_id FROM regions WHERE region_name LIKE '$region_name'");
+  $q = mysqli_query($conn, "SELECT region_id FROM regions WHERE region_name LIKE '$region_name' LIMIT 1");
   $res = $q->fetch_assoc();
 
   return $res;
