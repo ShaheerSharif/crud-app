@@ -30,27 +30,16 @@ function identify_relevant_table($conn, $col) {
     'regions'  => ['region_', 'region'],
   ];
 
-  $relevantTable = null;
-
   foreach ($aliasTable as $table => $aliases) {
     foreach ($aliases as $a) {
       // check if column starts with alias
       if (strpos($col, $a) === 0) {
-        $relevantTable = $table;
-        break;
+        return [
+          'table' => $table,
+          'exists' => col_exists($conn, $table, $col),
+        ];
       }
     }
-
-    if ($relevantTable) {
-      break;
-    }
-  }
-
-  if ($relevantTable) {
-    return [
-      'table' => $relevantTable,
-      'exists' => col_exists($conn, $relevantTable, $col),
-    ];
   }
 
   return [
