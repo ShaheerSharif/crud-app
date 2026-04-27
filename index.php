@@ -1,6 +1,22 @@
 <?php
 include("config/db.php");
 include("includes/styles.php");
+
+$result = mysqli_query($conn, "
+  SELECT
+    users.user_id,
+    users.user_name,
+    users.user_email,
+    users.user_phone,
+    branches.branch_name,
+    areas.area_name,
+    regions.region_name 
+  FROM users
+  INNER JOIN branches ON branches.branch_id=users.branch_id
+  INNER JOIN areas ON areas.area_id=branches.area_id
+  INNER JOIN regions ON regions.region_id=areas.region_id
+  WHERE users.user_isactive=1
+");
 ?>
 
 <div class="container mt-4">
@@ -33,43 +49,34 @@ include("includes/styles.php");
 
       <tbody>
         <?php
-        $result = mysqli_query($conn, "
-          SELECT
-            users.user_id,
-            users.user_name,
-            users.user_email,
-            users.user_phone,
-            branches.branch_name,
-            areas.area_name,
-            regions.region_name 
-          FROM users
-          INNER JOIN branches ON branches.branch_id=users.branch_id
-          INNER JOIN areas ON areas.area_id=branches.area_id
-          INNER JOIN regions ON regions.region_id=areas.region_id
-          WHERE users.user_isactive=1
-        ");
-
-        while($row = $result->fetch_assoc()) {
+        if ($result->num_rows !== 0) {
+          while($row = $result->fetch_assoc()) {
         ?>
-        <tr>
-          <td><?= htmlspecialchars($row['user_name']) ?></td>
-          <td><?= htmlspecialchars($row['user_email']) ?></td>
-          <td><?= htmlspecialchars($row['user_phone']) ?></td>
-          <td><?= htmlspecialchars($row['branch_name']) ?></td>
-          <td><?= htmlspecialchars($row['area_name']) ?></td>
-          <td><?= htmlspecialchars($row['region_name']) ?></td>
-          <td>
-            <a href="users/edit.php?user_id=<?= $row['user_id'] ?>" class="btn btn-sm btn-warning">
-              Edit
-            </a>
+          <tr>
+            <td><?= htmlspecialchars($row['user_name']) ?></td>
+            <td><?= htmlspecialchars($row['user_email']) ?></td>
+            <td><?= htmlspecialchars($row['user_phone']) ?></td>
+            <td><?= htmlspecialchars($row['branch_name']) ?></td>
+            <td><?= htmlspecialchars($row['area_name']) ?></td>
+            <td><?= htmlspecialchars($row['region_name']) ?></td>
+            <td>
+              <a href="users/edit.php?user_id=<?= $row['user_id'] ?>" class="btn btn-sm btn-warning">
+                Edit
+              </a>
 
-            <a href="users/delete.php?user_id=<?= $row['user_id'] ?>"
-               class="btn btn-sm btn-danger"
-               onclick="return confirm('Delete?')">
-              Delete
-            </a>
-          </td>
-        </tr>
+              <a href="users/delete.php?user_id=<?= $row['user_id'] ?>"
+                class="btn btn-sm btn-danger"
+                onclick="return confirm('Delete?')">
+                Delete
+              </a>
+            </td>
+          </tr>
+          <?php } ?>
+        <?php }
+          else { ?>
+            <tr >
+              <td colspan="7" class="text-center py-4 text-muted fst-italic">No users found</td>
+            </tr>
         <?php } ?>
       </tbody>
     </table>
