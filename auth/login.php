@@ -19,13 +19,6 @@ if (isset($_POST['submit'])) {
     }
 
     $jwt = gen_jwt($admin['admin_id'], $ttl);
-    setcookie('token', $jwt, [
-      'expires' => time() + $ttl - 180, // cookie expires 3 mins before token
-      'path' => '/',
-      'httponly' => true,
-      'secure' => true,
-      'samesite' => 'Strict',
-    ]);
 
     header('Location: ../');
     exit;

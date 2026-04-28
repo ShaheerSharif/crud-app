@@ -16,6 +16,14 @@ function gen_jwt(int $userId, int $ttl = 3600): string {
   $signature = base64_url_encode(hash_hmac('sha512', "$header.$payload", $signing_key, true));
   $jwt = "$header.$payload.$signature";
 
+  setcookie('token', $jwt, [
+    'expires' => time() + $ttl - 180, // cookie expires 3 mins before token
+    'path' => '/',
+    'httponly' => true,
+    'secure' => true,
+    'samesite' => 'Strict',
+  ]);
+
   return $jwt;
 }
 
