@@ -19,6 +19,8 @@ $result = mysqli_query($conn, "
 ");
 ?>
 
+<link href="./styles/index.css" rel="stylesheet">
+
 <div class="container mt-4">
 
   <div class="d-flex justify-content-between align-items-center mb-3">
@@ -33,7 +35,7 @@ $result = mysqli_query($conn, "
     </div>
   </div>
 
-  <div class="table-responsive">
+  <div class="table-responsive table-scroll">
     <table class="table table-striped table-bordered table-hover align-middle">
       <thead class="table-dark">
         <tr>
