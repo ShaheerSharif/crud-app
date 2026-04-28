@@ -33,6 +33,7 @@ if (isset($_POST['submit'])) {
     VALUES ('$name', '$email', '$phone', '$branch_id')
   ");
   header("Location: ../");
+  exit;
 }
 ?>
 

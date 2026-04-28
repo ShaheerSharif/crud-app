@@ -11,6 +11,7 @@ if (isset($_POST['submit'])) {
 
   create_user($conn, $name, $email, $phone, $branch_id);
   header("Location: ../");
+  exit;
 }
 ?>
 
