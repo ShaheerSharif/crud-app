@@ -1,5 +1,9 @@
 <?php
 
+require_once '../vendor/autoload.php';
+
+use Ramsey\Uuid\Uuid;
+
 function gen_jwt(int $userId, int $ttl = 3600): string {
   $signing_key = getenv('JWT_SECRET');
   $header = [
@@ -8,6 +12,7 @@ function gen_jwt(int $userId, int $ttl = 3600): string {
   ];
   $header = base64_url_encode(json_encode($header, JSON_THROW_ON_ERROR));
   $payload = [
+    'jti' => Uuid::uuid4()->toString(),
     'sub' => $userId,
     'iat' => time(),
     'exp' => time() + $ttl,
