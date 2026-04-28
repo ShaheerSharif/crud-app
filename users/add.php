@@ -2,6 +2,9 @@
 include("../config/db.php");
 include("../includes/styles.php");
 include("../lib/user.php");
+include('../middleware/auth.php');
+
+require_auth();
 
 if (isset($_POST['submit'])) {
   $name = $_POST['name'];

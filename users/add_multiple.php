@@ -7,6 +7,9 @@ include("../lib/csv_helpers.php");
 include("../lib/location_data.php");
 include("../lib/logging.php");
 include("../lib/user.php");
+include('../middleware/auth.php');
+
+require_auth();
 
 if (isset($_POST['submit'])) {
   $filename = $_FILES["file"]["tmp_name"];

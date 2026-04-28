@@ -1,5 +1,8 @@
 <?php
 include("../config/db.php");
+include('../middleware/auth.php');
+
+require_auth();
 
 $id = $_GET['user_id'];
 
