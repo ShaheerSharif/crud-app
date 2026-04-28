@@ -1,6 +1,6 @@
 <?php
 
-function gen_jwt(int $userId): string {
+function gen_jwt(int $userId, int $ttl = 3600): string {
   $signing_key = getenv('JWT_SECRET');
   $header = [
     'alg' => 'HS512',
@@ -10,7 +10,7 @@ function gen_jwt(int $userId): string {
   $payload = [
     'sub' => $userId,
     'iat' => time(),
-    'exp' => time() + 3600,
+    'exp' => time() + $ttl,
   ];
   $payload = base64_url_encode(json_encode($payload, JSON_THROW_ON_ERROR));
   $signature = base64_url_encode(hash_hmac('sha512', "$header.$payload", $signing_key, true));
