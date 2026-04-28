@@ -48,6 +48,11 @@ function verify_jwt(string $jwt): ?array {
   return $decoded_payload;
 }
 
+function discard_jwt() {
+  setcookie('token', '', time() - (3600 * 24 * 30), '/');
+  unset($_COOKIE['token']);
+}
+
 function base64_url_encode(string $text): string {
   return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($text));
 }
