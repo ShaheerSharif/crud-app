@@ -1,5 +1,22 @@
 <?php
+include('../config/db.php');
 include('../includes/styles.php');
+include('../lib/admin.php');
+
+if (isset($_POST['submit'])) {
+  $admin_name = $_POST['name'];
+  $admin_email = $_POST['email'];
+  $admin_pass = $_POST['password'];
+
+  if ($admin_pass !== $_POST['confirm-password']) {
+    die("Passwords do not match");
+  }
+
+  create_new_admin($conn, $admin_name, $admin_email, $admin_pass);
+
+  header('Location: login.php');
+  exit;
+}
 ?>
 
 <body class="bg-light">
@@ -10,13 +27,13 @@ include('../includes/styles.php');
 
       <h4 class="text-center mb-4">Create Account</h4>
 
-      <form method="POST" action="signup.php">
+      <form method='post'>
 
         <div class="mb-3">
           <label class="form-label">Username</label>
           <input 
             type="text" 
-            name="username" 
+            name="name" 
             class="form-control" 
             placeholder="Enter username" 
             required
@@ -49,14 +66,17 @@ include('../includes/styles.php');
           <label class="form-label">Confirm Password</label>
           <input 
             type="password" 
-            name="confirm_password" 
+            name="confirm-password" 
             class="form-control" 
             placeholder="Repeat password" 
             required
           >
         </div>
+        <small id="pass-error" class="text-danger d-none">
+          Passwords do not match
+        </small>
 
-        <button type="submit" class="btn btn-success w-100">
+        <button name="submit" type="submit" class="btn btn-success w-100">
           Sign Up
         </button>
 
@@ -73,3 +93,6 @@ include('../includes/styles.php');
 </div>
 
 </body>
+
+<?php include('../includes/scripts.php'); ?>
+<script src="../js/confirm_password.js"></script>

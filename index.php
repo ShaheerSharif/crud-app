@@ -2,6 +2,8 @@
 include("config/db.php");
 include("includes/styles.php");
 
+$adminName = 'example';
+
 $result = mysqli_query($conn, "
   SELECT
     users.user_id,
@@ -20,6 +22,24 @@ $result = mysqli_query($conn, "
 ?>
 
 <link href="./styles/index.css" rel="stylesheet">
+
+<nav class="navbar navbar-dark bg-dark shadow-sm">
+  <div class="container d-flex justify-content-between align-items-center">
+
+    <span class="navbar-brand fw-semibold mb-0">
+      Dashboard <span class="text-muted small">| Admin Panel</span>
+    </span>
+
+    <span class="text-light me-3 d-none d-md-inline">
+      Hi, <strong><?php echo htmlspecialchars($adminName); ?></strong>
+    </span>
+
+    <a href="auth/logout.php" class="btn btn-danger btn-sm">
+      Logout
+    </a>
+
+  </div>
+</nav>
 
 <div class="container mt-4">
 
