@@ -1,9 +1,10 @@
 <?php
-include("../config/db.php");
 include("../includes/styles.php");
 include('../middleware/auth.php');
 
 require_auth();
+
+$conn = require_once '../config/db.php';
 
 $id = $_GET['user_id'];
 
@@ -35,7 +36,7 @@ if (isset($_POST['submit'])) {
     INSERT INTO users (user_name, user_email, user_phone, branch_id)
     VALUES ('$name', '$email', '$phone', '$branch_id')
   ");
-  header("Location: ../");
+  header("Location: ./");
   exit;
 }
 ?>

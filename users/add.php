@@ -1,10 +1,11 @@
 <?php
-include("../config/db.php");
 include("../includes/styles.php");
 include("../lib/user.php");
 include('../middleware/auth.php');
 
 require_auth();
+
+$conn = require_once '../config/db.php';
 
 if (isset($_POST['submit'])) {
   $name = $_POST['name'];
@@ -13,7 +14,7 @@ if (isset($_POST['submit'])) {
   $branch_id = $_POST['branch_id'];
 
   create_user($conn, $name, $email, $phone, $branch_id);
-  header("Location: ../");
+  header("Location: ./");
   exit;
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-$aliasTable = [
+return [
   'users'    => ['user_', 'user'],
   'branches' => ['branch_', 'branch'],
   'areas'    => ['area_', 'area'],

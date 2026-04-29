@@ -1,6 +1,4 @@
 <?php
-include("../config/db.php");
-include("../config/aliases.php");
 include("../includes/styles.php");
 include("../lib/column_helpers.php");
 include("../lib/csv_helpers.php");
@@ -8,6 +6,9 @@ include("../lib/location_data.php");
 include("../lib/logging.php");
 include("../lib/user.php");
 include('../middleware/auth.php');
+
+$conn = require_once '../config/db.php';
+$aliasTable = require_once '../config/aliases.php';
 
 require_auth();
 
@@ -135,7 +136,7 @@ if (isset($_POST['submit'])) {
     if ($region_id) update_optional_region_fields($conn, $region_id, $row);
   }
 
-  header("Location: ../");
+  header("Location: ./");
   exit;
 }
 ?>

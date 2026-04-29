@@ -1,8 +1,9 @@
 <?php
-include('../config/db.php');
 include('../includes/styles.php');
 include('../lib/admin.php');
 include('../lib/jwt.php');
+
+$conn = require_once '../config/db.php';
 
 if (isset($_POST['submit'])) {
   $email = $_POST['email'];
@@ -20,7 +21,7 @@ if (isset($_POST['submit'])) {
 
     $jwt = gen_jwt($admin['admin_id'], $ttl);
 
-    header('Location: ../');
+    header('Location: ../users/');
     exit;
   } else {
     echo "<script>alert('Login Failed.');</script>";
