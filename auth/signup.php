@@ -2,7 +2,7 @@
 include('../includes/styles.php');
 include('../lib/admin.php');
 
-$conn = require_once '../config/db.php';
+$conn = require_once __DIR__ . '/../config/db.php';
 
 if (isset($_POST['submit'])) {
   $admin_name = $_POST['name'];

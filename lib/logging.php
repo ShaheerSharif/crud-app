@@ -10,7 +10,7 @@ class LogLevel {
   const FATAL   = 'FATAL';
 }
 
-function sql_log($service, $msg, $data = [], $loglevel = LogLevel::INFO) {
+function sql_log(string $service, string $msg, array $data = [], string $loglevel = LogLevel::INFO) {
   $timestamp = gmdate('Y-m-d H:i:s');
 
   $dataStr = implode(', ', array_map(

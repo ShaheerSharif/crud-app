@@ -2,14 +2,13 @@
 include("../includes/styles.php");
 include('../middleware/auth.php');
 
-require_auth();
-
 $conn = require_once '../config/db.php';
+
+require_auth($conn);
 
 $adminName = 'example';
 
-$result = mysqli_query($conn, "
-  SELECT
+$result = mysqli_query($conn, "SELECT
     users.user_id,
     users.user_name,
     users.user_email,

@@ -1,8 +1,7 @@
 <?php
 
-function col_exists($conn, $table, $col) {
-  $q = mysqli_query($conn, "
-    SELECT COUNT(*) AS cnt
+function col_exists(mysqli $conn, string $table, string $col) {
+  $q = $conn->query("SELECT COUNT(*) AS cnt
     FROM INFORMATION_SCHEMA.COLUMNS
     WHERE TABLE_SCHEMA = DATABASE()
     AND TABLE_NAME = '$table'
@@ -14,15 +13,15 @@ function col_exists($conn, $table, $col) {
   return $row && $row['cnt'] > 0;
 }
 
-function add_column($conn, $table, $col, $datatype='VARCHAR(255)', $nullable=true) {
-  $col = mysqli_real_escape_string($conn, $col);
+function add_column(mysqli $conn, string $table, string $col, string $datatype='VARCHAR(255)', bool $nullable=true) {
+  $col = $conn->real_escape_string($col);
 
   $null_sql = $nullable ? 'NULL' : 'NOT NULL';
 
-  mysqli_query($conn, "ALTER TABLE `$table` ADD COLUMN `$col` $datatype $null_sql");
+  $conn->query("ALTER TABLE `$table` ADD COLUMN `$col` $datatype $null_sql");
 }
 
-function identify_relevant_table($conn, $col, $aliasTable) {
+function identify_relevant_table(mysqli $conn, string $col, array $aliasTable) {
   foreach ($aliasTable as $table => $aliases) {
     foreach ($aliases as $a) {
       // check if column starts with alias

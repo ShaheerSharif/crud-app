@@ -1,18 +1,17 @@
 <?php
 
-function create_new_admin($conn, string $admin_name, string $admin_email, string $admin_pass) {
+function create_new_admin(mysqli $conn, string $admin_name, string $admin_email, string $admin_pass) {
   $hashed_pass = password_hash($admin_pass, PASSWORD_DEFAULT);
 
-  mysqli_query($conn, "INSERT INTO admins (admin_name, admin_email, admin_pass) VALUES ('$admin_name', '$admin_email', '$hashed_pass')");
+  $conn->query("INSERT INTO admins (admin_name, admin_email, admin_pass) VALUES ('$admin_name', '$admin_email', '$hashed_pass')");
 
   $admin_id = mysqli_insert_id($conn);
 
   return $admin_id;
 }
 
-function verify_admin($conn, string $admin_email, string $admin_pass) {
-  $q = mysqli_query($conn, "
-    SELECT
+function verify_admin(mysqli $conn, string $admin_email, string $admin_pass) {
+  $q = $conn->query("SELECT
       admin_id,
       admin_email,
       admin_pass

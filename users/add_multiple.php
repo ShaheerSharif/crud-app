@@ -10,7 +10,7 @@ include('../middleware/auth.php');
 $conn = require_once '../config/db.php';
 $aliasTable = require_once '../config/aliases.php';
 
-require_auth();
+require_auth($conn);
 
 if (isset($_POST['submit'])) {
   $filename = $_FILES["file"]["tmp_name"];

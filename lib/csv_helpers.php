@@ -5,8 +5,8 @@ include('str_helpers.php');
 /**
  * Convert CSV records to PHP arrays
  */
-function csv_to_arr($filename) {
-  $handle = fopen($filename, 'r');
+function csv_to_arr(string $file) {
+  $handle = fopen($file, 'r');
   
   $headers = fgetcsv($handle);
 

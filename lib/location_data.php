@@ -3,9 +3,8 @@
 /**
  * Checks if branch exists in a region and area. Returns region, area and branch id if exists
  */
-function branch_exists($conn, $region_name, $area_name, $branch_name) {
-  $q = mysqli_query($conn, "
-    SELECT
+function branch_exists(mysqli $conn, string $region_name, string $area_name, string $branch_name) {
+  $q = $conn->query("SELECT
       regions.region_id,
       areas.area_id,
       branches.branch_id
@@ -29,9 +28,8 @@ function branch_exists($conn, $region_name, $area_name, $branch_name) {
 /**
  * Checks if area exists in a region. Returns region and area id if exists.
  */
-function area_exists($conn, $region_name, $area_name) {
-  $q = mysqli_query($conn, "
-    SELECT
+function area_exists(mysqli $conn, string $region_name, string $area_name) {
+  $q = mysqli_query($conn, "SELECT
       regions.region_id,
       areas.area_id
     FROM regions
@@ -51,7 +49,7 @@ function area_exists($conn, $region_name, $area_name) {
 /**
  * Checks if region exists. Returns region id if exists.
  */
-function region_exists($conn, $region_name) {
+function region_exists(mysqli $conn, string $region_name) {
   $q = mysqli_query($conn, "SELECT region_id FROM regions WHERE region_name LIKE '$region_name' LIMIT 1");
   $res = $q->fetch_assoc();
 
@@ -61,7 +59,7 @@ function region_exists($conn, $region_name) {
 /**
  * Creates new branch, returns branch id.
  */
-function create_branch($conn, $branch_name, $area_id, $fields) {
+function create_branch(mysqli $conn, string $branch_name, int $area_id, array $fields) {
   $prefix = 'branch_';
   $exclude = ['branch_id', 'branch_name'];
 
@@ -92,7 +90,7 @@ function create_branch($conn, $branch_name, $area_id, $fields) {
 /**
  * Creates new area, returns area id.
  */
-function create_area($conn, $area_name, $region_id, $fields) {
+function create_area(mysqli $conn, string $area_name, int $region_id, array $fields) {
   $prefix = 'area_';
   $exclude = ['area_id', 'area_name'];
 
@@ -123,7 +121,7 @@ function create_area($conn, $area_name, $region_id, $fields) {
 /**
  * Creates new region, returns region id.
  */
-function create_region($conn, $region_name, $fields) {
+function create_region(mysqli $conn, string $region_name, array $fields) {
   $prefix = 'region_';
   $exclude = ['region_id', 'region_name'];
 
@@ -151,7 +149,7 @@ function create_region($conn, $region_name, $fields) {
   return $region_id;
 }
 
-function update_optional_branch_fields($conn, $branch_id, $fields) {
+function update_optional_branch_fields(mysqli $conn, int $branch_id, array $fields) {
   $prefix = 'branch_';
   $exclude = ['branch_id', 'branch_name'];
 
@@ -171,7 +169,7 @@ function update_optional_branch_fields($conn, $branch_id, $fields) {
   }
 }
 
-function update_optional_area_fields($conn, $area_id, $fields) {
+function update_optional_area_fields(mysqli $conn, int $area_id, array $fields) {
   $prefix = 'area_';
   $exclude = ['area_id', 'area_name'];
 
@@ -191,7 +189,7 @@ function update_optional_area_fields($conn, $area_id, $fields) {
   }
 }
 
-function update_optional_region_fields($conn, $region_id, $fields) {
+function update_optional_region_fields(mysqli $conn, int $region_id, array $fields) {
   $prefix = 'region_';
   $exclude = ['region_id', 'region_name'];
 

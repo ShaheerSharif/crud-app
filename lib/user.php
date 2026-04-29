@@ -1,7 +1,7 @@
 <?php
 include("array_helpers.php");
 
-function create_user($conn, $user_email, $branch_id, $fields) {
+function create_user(mysqli $conn, string $user_email, int $branch_id, array $fields) {
   $prefix = 'user_';
   $exclude = ['user_id', 'user_email'];
 
@@ -20,8 +20,7 @@ function create_user($conn, $user_email, $branch_id, $fields) {
   $sqlVals = implode(', ', $sqlValParts);
 
   if ($sqlCols === '' || $sqlVals === '') {
-    mysqli_query($conn, "
-      INSERT INTO users(user_email, branch_id)
+    $conn->query("INSERT INTO users(user_email, branch_id)
       VALUES (
         '$user_email',
         $branch_id
@@ -30,8 +29,7 @@ function create_user($conn, $user_email, $branch_id, $fields) {
   }
 
   else {
-    mysqli_query($conn, "
-      INSERT INTO users(user_email, branch_id, $sqlCols)
+    $conn->query("INSERT INTO users(user_email, branch_id, $sqlCols)
       VALUES (
         '$user_email',
         $branch_id,
@@ -45,7 +43,7 @@ function create_user($conn, $user_email, $branch_id, $fields) {
   return $user_id;
 }
 
-function update_user_all_except_email($conn, $user_id, $branch_id, $fields) {
+function update_user_all_except_email(mysqli $conn, int $user_id, int $branch_id, array $fields) {
   $prefix = 'user_';
   $exclude = ['user_id', 'user_email'];
 
@@ -61,14 +59,14 @@ function update_user_all_except_email($conn, $user_id, $branch_id, $fields) {
   $sql = implode(', ', $sqlParts);
 
   if ($sql === '') {
-    mysqli_query($conn, "UPDATE users SET branch_id=$branch_id WHERE user_id=$user_id");
+    $conn->query("UPDATE users SET branch_id=$branch_id WHERE user_id=$user_id");
   } else {
-    mysqli_query($conn, "UPDATE users SET branch_id=$branch_id, $sql WHERE user_id=$user_id");
+    $conn->query("UPDATE users SET branch_id=$branch_id, $sql WHERE user_id=$user_id");
   }
 }
 
-function email_exists($conn, $user_email) {
-  $q = mysqli_query($conn, "SELECT user_id FROM users WHERE user_email='$user_email' LIMIT 1");
+function email_exists(mysqli $conn, string $user_email) {
+  $q = $conn->query("SELECT user_id FROM users WHERE user_email='$user_email' LIMIT 1");
   $res = $q->fetch_assoc();
 
   return $res['user_id'];

@@ -2,11 +2,9 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$jwt_config = require_once __DIR__ . '/../config/jwt.php';
-
 use Ramsey\Uuid\Uuid;
 
-function gen_jwt($conn, int $admin_id, int $ttl = 3600): string {
+function gen_jwt(mysqli $conn, array $jwt_config, int $admin_id, int $ttl = 3600): string {
   $jti = Uuid::uuid4()->toString();
   $iat = time();
   $exp = $iat + $ttl;
@@ -27,8 +25,10 @@ function gen_jwt($conn, int $admin_id, int $ttl = 3600): string {
   $signature = base64_url_encode(hash_hmac('sha512', "$header.$payload", $signing_key, true));
   $jwt = "$header.$payload.$signature";
 
+  $token_exp = $exp - 180; // cookie expires 3 mins before token
+
   setcookie('token', $jwt, [
-    'expires' => $exp - 180, // cookie expires 3 mins before token
+    'expires' => $token_exp,
     'path' => '/',
     'httponly' => true,
     'secure' => true,
@@ -39,13 +39,13 @@ function gen_jwt($conn, int $admin_id, int $ttl = 3600): string {
     INSERT INTO auth_tokens (auth_token_jti, auth_token_expires_at, admin_id)
     VALUES (?, FROM_UNIXTIME(?), ?)
   ");
-  $stmt->bind_param("sii", $jti, $exp, $admin_id);
+  $stmt->bind_param("sii", $jti, $token_exp, $admin_id);
   $stmt->execute();
 
   return $jwt;
 }
 
-function verify_jwt($conn, string $jwt): ?array {
+function verify_jwt(mysqli $conn, string $jwt): ?array {
   $signing_key = getenv('JWT_SECRET');
 
   if (!$signing_key) return null;
@@ -73,26 +73,28 @@ function verify_jwt($conn, string $jwt): ?array {
 
   $jti = $decoded_payload['jti'];
 
-  $q = mysqli_query($conn, "SELECT COUNT(*) as cnt
+  $stmt = $conn->prepare("SELECT COUNT(*) as cnt
     FROM auth_tokens
     WHERE auth_token_jti = ?
     AND auth_token_revoked_at IS NULL
     AND auth_token_expires_at > NOW()
   ");
+  $stmt->bind_param('s', $jti);
+  $stmt->execute();
 
-  $row = $q->fetch_assoc();
+  $row = $stmt->get_result()->fetch_assoc();
   if ($row['cnt'] < 1) return null;
 
   return $decoded_payload;
 }
 
-function discard_jwt($conn) {
+function discard_jwt(mysqli $conn) {
   $decoded_payload = $_COOKIE['token'];
   setcookie('token', '', time() - (3600 * 24 * 30), '/');
 
   $jti = $decoded_payload['jti'];
   $revoked_timestamp = time();
-  mysqli_query($conn, "UPDATE auth_tokens SET auth_token_revoked_at='$revoked_timestamp' WHERE auth_token_jti='$jti'");
+  $conn->query("UPDATE auth_tokens SET auth_token_revoked_at='$revoked_timestamp' WHERE auth_token_jti='$jti'");
 
   unset($_COOKIE['token']);
 }

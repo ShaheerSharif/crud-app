@@ -3,24 +3,25 @@
 /**
  * Creates file at some path if it does not exist. Creates directories recursively if they don't exist as well.
  */
-function create_file_if_not_exist($path, $filename, $perm) {
+function create_file_if_not_exist(string $path, string $filename, int $perm) {
+  $file = $path . '/' . $filename;
+
+  if (file_exists($file)) return;
+
   if (!is_dir($path)) {
     if (!mkdir($path, $perm, true)) {
       die('Failed to create folder');
     }
   }
 
-  $file = $path . '/' . $filename;
+  $content = '';
 
-  if (!file_exists($file)) {
-    $content = '';
-    if (!file_put_contents($file, $content) === false) {
-      die('Failed to create file');
-    }
+  if (!file_put_contents($file, $content) === false) {
+    die('Failed to create file');
   }
 }
 
-function append_to_file($path, $filename, $content, $perm=0755) {
+function append_to_file(string $path, string $filename, string $content, int $perm=0755) {
   $file = $path . '/' . $filename;
 
   create_file_if_not_exist($path, $filename, $perm);

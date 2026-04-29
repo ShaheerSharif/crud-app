@@ -3,9 +3,9 @@ include("../includes/styles.php");
 include("../lib/user.php");
 include('../middleware/auth.php');
 
-require_auth();
-
 $conn = require_once '../config/db.php';
+
+require_auth($conn);
 
 if (isset($_POST['submit'])) {
   $name = $_POST['name'];

@@ -2,9 +2,9 @@
 include("../includes/styles.php");
 include('../middleware/auth.php');
 
-require_auth();
-
 $conn = require_once '../config/db.php';
+
+require_auth($conn);
 
 $id = $_GET['user_id'];
 
