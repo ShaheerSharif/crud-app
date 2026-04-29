@@ -86,6 +86,7 @@ function verify_jwt(string $jwt): ?array {
     WHERE auth_token_jti = ?
     AND auth_token_revoked_at IS NULL
     AND auth_token_expires_at > NOW()
+    LIMIT 1
   ");
   $stmt->bind_param('s', $jti);
   $stmt->execute();
