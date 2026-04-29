@@ -2,9 +2,10 @@
 
 $payload = require_once __DIR__ . '/../middleware/auth.php';
 
+require_once __DIR__ . '/../lib/user.php';
+require_once __DIR__ . '/../lib/location_data.php';
+
 include("../includes/styles.php");
-include("../lib/user.php");
-include('../lib/location_data.php');
 
 if (isset($_POST['submit'])) {
   $name = $_POST['name'];

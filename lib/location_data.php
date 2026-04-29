@@ -1,5 +1,5 @@
 <?php
-include('../config/db.php');
+require_once __DIR__ . '/../config/db.php';
 
 /**
  * Checks if branch exists in a region and area. Returns region, area and branch id if exists

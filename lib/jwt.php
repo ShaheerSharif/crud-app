@@ -1,6 +1,6 @@
 <?php
-include('../config/db.php');
-include('../config/jwt.php');
+require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../config/jwt.php';
 
 require_once __DIR__ . '/../vendor/autoload.php';
 

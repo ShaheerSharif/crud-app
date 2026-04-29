@@ -2,12 +2,13 @@
 
 $payload = require_once __DIR__ . '/../middleware/auth.php';
 
+require_once __DIR__ . '/../lib/column_helpers.php';
+require_once __DIR__ . '/../lib/csv_helpers.php';
+require_once __DIR__ . '/../lib/location_data.php';
+require_once __DIR__ . '/../lib/logging.php';
+require_once __DIR__ . '/../lib/user.php';
+
 include("../includes/styles.php");
-include("../lib/column_helpers.php");
-include("../lib/csv_helpers.php");
-include("../lib/location_data.php");
-include("../lib/logging.php");
-include("../lib/user.php");
 
 if (isset($_POST['submit'])) {
   $filename = $_FILES["file"]["tmp_name"];

@@ -1,6 +1,7 @@
 <?php
+require_once __DIR__ . '/../lib/admin.php';
+
 include('../includes/styles.php');
-include('../lib/admin.php');
 
 if (isset($_POST['submit'])) {
   $admin_name = $_POST['name'];

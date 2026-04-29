@@ -1,6 +1,6 @@
 <?php
-include('../config/db.php');
-include('../config/aliases.php');
+require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../config/aliases.php';
 
 function col_exists(string $table, string $col) {
   $conn = get_db();

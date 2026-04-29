@@ -1,7 +1,8 @@
 <?php
+require_once __DIR__ . '/../lib/admin.php';
+require_once __DIR__ . '/../lib/jwt.php';
+
 include('../includes/styles.php');
-include('../lib/admin.php');
-include('../lib/jwt.php');
 
 if (isset($_POST['submit'])) {
   $email = $_POST['email'];

@@ -2,7 +2,7 @@
 
 $payload = require_once __DIR__ . '/../middleware/auth.php';
 
-include('../lib/user.php');
+require_once __DIR__ . '/../lib/user.php';
 
 $id = $_GET['user_id'];
 

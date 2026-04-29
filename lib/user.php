@@ -1,6 +1,6 @@
 <?php
-include('../config/db.php');
-include("array_helpers.php");
+require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/array_helpers.php';
 
 function create_user(string $user_email, int $branch_id, array $fields) {
   $conn = get_db();

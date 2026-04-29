@@ -1,5 +1,5 @@
 <?php
-include('../config/db.php');
+require_once __DIR__ . '/../config/db.php';
 
 function create_new_admin(string $admin_name, string $admin_email, string $admin_pass) {
   $conn = get_db();

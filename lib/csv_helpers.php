@@ -1,6 +1,6 @@
 <?php
 
-include('str_helpers.php');
+require_once __DIR__ . '/str_helpers.php';
 
 /**
  * Convert CSV records to PHP arrays

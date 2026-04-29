@@ -1,5 +1,5 @@
 <?php
-include('../lib/location_data.php');
+require_once __DIR__ . '/../lib/location_data.php';
 
 $area_id = $_POST['area_id'];
 

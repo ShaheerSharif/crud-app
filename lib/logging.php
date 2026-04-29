@@ -1,6 +1,6 @@
 <?php
 
-include("file_helpers.php");
+require_once __DIR__ . '/file_helpers.php';
 
 class LogLevel {
   const INFO    = 'INFO';
