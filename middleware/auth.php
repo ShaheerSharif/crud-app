@@ -1,6 +1,5 @@
 <?php
-
-require_once __DIR__ . '/../lib/jwt.php';
+include('../lib/jwt.php');
 
 if (!isset($_COOKIE['token'])) {
   header('Location: ../auth/login.php');
