@@ -11,7 +11,7 @@ $adminName = 'example';
 $rows = fetch_all_active_users();
 ?>
 
-<link href="./styles/index.css" rel="stylesheet">
+<link href="../styles/index.css" rel="stylesheet">
 
 <nav class="navbar navbar-dark bg-dark shadow-sm">
   <div class="container d-flex justify-content-between align-items-center">
@@ -24,7 +24,7 @@ $rows = fetch_all_active_users();
       Hi, <strong><?php echo htmlspecialchars($adminName); ?></strong>
     </span>
 
-    <a href="auth/logout.php" class="btn btn-danger btn-sm">
+    <a href="../auth/logout.php" class="btn btn-danger btn-sm">
       Logout
     </a>
 
