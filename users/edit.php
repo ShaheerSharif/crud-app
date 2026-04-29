@@ -3,29 +3,11 @@
 $payload = require_once __DIR__ . '/../middleware/auth.php';
 
 include("../includes/styles.php");
-include('../middleware/auth.php');
-
-$conn = require_once __DIR__ . '/../config/db.php';
+include('../lib/user.php');
 
 $id = $_GET['user_id'];
 
-$result = mysqli_query($conn, "
-  SELECT
-    users.user_id,
-    users.user_name,
-    users.user_email,
-    users.user_phone,
-    branches.branch_id,
-    areas.area_id,
-    regions.region_id 
-  FROM users
-  INNER JOIN branches ON branches.branch_id=users.branch_id
-  INNER JOIN areas ON areas.area_id=branches.area_id
-  INNER JOIN regions ON regions.region_id=areas.region_id
-  WHERE users.user_id=$id
-");
-
-$default_row = $result->fetch_assoc();
+$default_row = fetch_user($id);
 
 if (isset($_POST['submit'])) {
   $name = $_POST['name'];
@@ -33,10 +15,7 @@ if (isset($_POST['submit'])) {
   $phone = $_POST['phone'];
   $branch_id = $_POST['branch_id'];
 
-  mysqli_query($conn, "
-    INSERT INTO users (user_name, user_email, user_phone, branch_id)
-    VALUES ('$name', '$email', '$phone', '$branch_id')
-  ");
+  update_user($id, $branch_id, ['user_name' => $name, 'user_email' => $email, 'user_phone' => $phone]);
   header("Location: ./");
   exit;
 }
@@ -71,12 +50,12 @@ if (isset($_POST['submit'])) {
           <select name="region_id" id="region" class="form-select" required>
             <option value="">Select Region</option>
             <?php
-            $regions = mysqli_query($conn, "SELECT * FROM regions");
-            while ($row = mysqli_fetch_assoc($regions)) {
-              if ($default_row['region_id'] === $row['region_id']) {
-                echo "<option value='{$row['region_id']}' selected>{$row['region_name']}</option>";
+            $regions = fetch_regions();
+            foreach ($regions as $region) {
+              if ($default_row['region_id'] === $region['region_id']) {
+                echo "<option value='{$region['region_id']}' selected>{$region['region_name']}</option>";
               } else {
-                echo "<option value='{$row['region_id']}'>{$row['region_name']}</option>";
+                echo "<option value='{$region['region_id']}'>{$region['region_name']}</option>";
               }
             }
             ?>
@@ -88,12 +67,12 @@ if (isset($_POST['submit'])) {
           <select name="area_id" id="area" class="form-select" required>
             <option value="">Select Area</option>
             <?php
-            $areas = mysqli_query($conn, "SELECT * FROM areas WHERE region_id={$default_row['region_id']}");
-            while ($row = mysqli_fetch_assoc($areas)) {
-              if ($default_row['area_id'] === $row['area_id']) {
-                echo "<option value='{$row['area_id']}' selected>{$row['area_name']}</option>";
+            $areas = fetch_areas($default_row['region_id']);
+            foreach ($areas as $area) {
+              if ($default_row['area_id'] === $area['area_id']) {
+                echo "<option value='{$area['area_id']}' selected>{$area['area_name']}</option>";
               } else {
-                echo "<option value='{$row['area_id']}'>{$row['area_name']}</option>";
+                echo "<option value='{$area['area_id']}'>{$area['area_name']}</option>";
               }
             }
             ?>
@@ -105,20 +84,12 @@ if (isset($_POST['submit'])) {
           <select name="branch_id" id="branch" class="form-select" required>
             <option value="">Select Branch</option>
             <?php
-            $branches = mysqli_query($conn, "
-              SELECT branches.branch_id, branches.branch_name
-              FROM branches
-              INNER JOIN areas ON
-                areas.area_id=branches.area_id
-              WHERE
-                area.region_id={$default_row['region_id']} AND
-                branches.area_id={$default_row['area_id']}
-            ");
-            while ($row = mysqli_fetch_assoc($branches)) {
-              if ($default_row['branch_id'] === $row['branch_id']) {
-                echo "<option value='{$row['branch_id']}' selected>{$row['branch_name']}</option>";
+            $branches = fetch_branches($default_row['area_id']);
+            foreach ($branches as $branch) {
+              if ($default_row['branch_id'] === $branch['branch_id']) {
+                echo "<option value='{$branch['branch_id']}' selected>{$branch['branch_name']}</option>";
               } else {
-                echo "<option value='{$row['branch_id']}'>{$row['branch_name']}</option>";
+                echo "<option value='{$branch['branch_id']}'>{$branch['branch_name']}</option>";
               }
             }
             ?>

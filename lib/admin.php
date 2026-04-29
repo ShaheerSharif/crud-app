@@ -1,6 +1,8 @@
 <?php
+include('../config/db.php');
 
-function create_new_admin(mysqli $conn, string $admin_name, string $admin_email, string $admin_pass) {
+function create_new_admin(string $admin_name, string $admin_email, string $admin_pass) {
+  $conn = get_db();
   $hashed_pass = password_hash($admin_pass, PASSWORD_DEFAULT);
 
   $conn->query("INSERT INTO admins (admin_name, admin_email, admin_pass) VALUES ('$admin_name', '$admin_email', '$hashed_pass')");
@@ -10,7 +12,8 @@ function create_new_admin(mysqli $conn, string $admin_name, string $admin_email,
   return $admin_id;
 }
 
-function verify_admin(mysqli $conn, string $admin_email, string $admin_pass) {
+function verify_admin(string $admin_email, string $admin_pass) {
+  $conn = get_db();
   $q = $conn->query("SELECT
       admin_id,
       admin_email,

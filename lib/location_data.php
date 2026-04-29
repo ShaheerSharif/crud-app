@@ -1,9 +1,11 @@
 <?php
+include('../config/db.php');
 
 /**
  * Checks if branch exists in a region and area. Returns region, area and branch id if exists
  */
-function branch_exists(mysqli $conn, string $region_name, string $area_name, string $branch_name) {
+function branch_exists(string $region_name, string $area_name, string $branch_name) {
+  $conn = get_db();
   $q = $conn->query("SELECT
       regions.region_id,
       areas.area_id,
@@ -28,8 +30,9 @@ function branch_exists(mysqli $conn, string $region_name, string $area_name, str
 /**
  * Checks if area exists in a region. Returns region and area id if exists.
  */
-function area_exists(mysqli $conn, string $region_name, string $area_name) {
-  $q = mysqli_query($conn, "SELECT
+function area_exists(string $region_name, string $area_name) {
+  $conn = get_db();
+  $q = $conn->query("SELECT
       regions.region_id,
       areas.area_id
     FROM regions
@@ -49,8 +52,9 @@ function area_exists(mysqli $conn, string $region_name, string $area_name) {
 /**
  * Checks if region exists. Returns region id if exists.
  */
-function region_exists(mysqli $conn, string $region_name) {
-  $q = mysqli_query($conn, "SELECT region_id FROM regions WHERE region_name LIKE '$region_name' LIMIT 1");
+function region_exists(string $region_name) {
+  $conn = get_db();
+  $q = $conn->query("SELECT region_id FROM regions WHERE region_name LIKE '$region_name' LIMIT 1");
   $res = $q->fetch_assoc();
 
   return $res;
@@ -59,7 +63,8 @@ function region_exists(mysqli $conn, string $region_name) {
 /**
  * Creates new branch, returns branch id.
  */
-function create_branch(mysqli $conn, string $branch_name, int $area_id, array $fields) {
+function create_branch(string $branch_name, int $area_id, array $fields) {
+  $conn = get_db();
   $prefix = 'branch_';
   $exclude = ['branch_id', 'branch_name'];
 
@@ -78,9 +83,9 @@ function create_branch(mysqli $conn, string $branch_name, int $area_id, array $f
   $sqlVals = implode(', ', $sqlValParts);
 
   if ($sqlCols === '' || $sqlVals === '') {
-    mysqli_query($conn, "INSERT INTO branches(branch_name, area_id) VALUES ('$branch_name', $area_id)");
+    $conn->query("INSERT INTO branches(branch_name, area_id) VALUES ('$branch_name', $area_id)");
   } else {
-    mysqli_query($conn, "INSERT INTO branches(branch_name, area_id, $sqlCols) VALUES ('$branch_name', $area_id, $sqlVals)");
+    $conn->query("INSERT INTO branches(branch_name, area_id, $sqlCols) VALUES ('$branch_name', $area_id, $sqlVals)");
   }
 
   $branch_id = mysqli_insert_id($conn);
@@ -90,7 +95,8 @@ function create_branch(mysqli $conn, string $branch_name, int $area_id, array $f
 /**
  * Creates new area, returns area id.
  */
-function create_area(mysqli $conn, string $area_name, int $region_id, array $fields) {
+function create_area(string $area_name, int $region_id, array $fields) {
+  $conn = get_db();
   $prefix = 'area_';
   $exclude = ['area_id', 'area_name'];
 
@@ -109,9 +115,9 @@ function create_area(mysqli $conn, string $area_name, int $region_id, array $fie
   $sqlVals = implode(', ', $sqlValParts);
 
   if ($sqlCols === '' || $sqlVals === '') {
-    mysqli_query($conn, "INSERT INTO areas(area_name, region_id) VALUES ('$area_name', $region_id)");
+    $conn->query("INSERT INTO areas(area_name, region_id) VALUES ('$area_name', $region_id)");
   } else {
-    mysqli_query($conn, "INSERT INTO areas(area_name, region_id, $sqlCols) VALUES ('$area_name', $region_id, $sqlVals)");
+    $conn->query("INSERT INTO areas(area_name, region_id, $sqlCols) VALUES ('$area_name', $region_id, $sqlVals)");
   }
 
   $area_id = mysqli_insert_id($conn);
@@ -121,7 +127,8 @@ function create_area(mysqli $conn, string $area_name, int $region_id, array $fie
 /**
  * Creates new region, returns region id.
  */
-function create_region(mysqli $conn, string $region_name, array $fields) {
+function create_region(string $region_name, array $fields) {
+  $conn = get_db();
   $prefix = 'region_';
   $exclude = ['region_id', 'region_name'];
 
@@ -140,16 +147,17 @@ function create_region(mysqli $conn, string $region_name, array $fields) {
   $sqlVals = implode(', ', $sqlValParts);
 
   if ($sqlCols === '' || $sqlVals === '') {
-    mysqli_query($conn, "INSERT INTO regions(region_name) VALUES ('$region_name')");
+    $conn->query("INSERT INTO regions(region_name) VALUES ('$region_name')");
   } else {
-    mysqli_query($conn, "INSERT INTO regions(region_name, $sqlCols) VALUES ('$region_name', $sqlVals)");
+    $conn->query("INSERT INTO regions(region_name, $sqlCols) VALUES ('$region_name', $sqlVals)");
   }
 
   $region_id = mysqli_insert_id($conn);
   return $region_id;
 }
 
-function update_optional_branch_fields(mysqli $conn, int $branch_id, array $fields) {
+function update_optional_branch_fields(int $branch_id, array $fields) {
+  $conn = get_db();
   $prefix = 'branch_';
   $exclude = ['branch_id', 'branch_name'];
 
@@ -165,11 +173,12 @@ function update_optional_branch_fields(mysqli $conn, int $branch_id, array $fiel
   $sql = implode(', ', $sqlParts);
 
   if ($sql !== '') {
-    mysqli_query($conn, "UPDATE branches SET $sql WHERE branch_id=$branch_id");
+    $conn->query("UPDATE branches SET $sql WHERE branch_id=$branch_id");
   }
 }
 
-function update_optional_area_fields(mysqli $conn, int $area_id, array $fields) {
+function update_optional_area_fields(int $area_id, array $fields) {
+  $conn = get_db();
   $prefix = 'area_';
   $exclude = ['area_id', 'area_name'];
 
@@ -185,11 +194,12 @@ function update_optional_area_fields(mysqli $conn, int $area_id, array $fields) 
   $sql = implode(', ', $sqlParts);
 
   if ($sql !== '') {
-    mysqli_query($conn, "UPDATE areas SET $sql WHERE area_id=$area_id");
+    $conn->query("UPDATE areas SET $sql WHERE area_id=$area_id");
   }
 }
 
-function update_optional_region_fields(mysqli $conn, int $region_id, array $fields) {
+function update_optional_region_fields(int $region_id, array $fields) {
+  $conn = get_db();
   $prefix = 'region_';
   $exclude = ['region_id', 'region_name'];
 
@@ -205,6 +215,36 @@ function update_optional_region_fields(mysqli $conn, int $region_id, array $fiel
   $sql = implode(', ', $sqlParts);
 
   if ($sql !== '') {
-    mysqli_query($conn, "UPDATE regions SET $sql WHERE region_id=$region_id");
+    $conn->query("UPDATE regions SET $sql WHERE region_id=$region_id");
   }
+}
+
+function fetch_branches(?int $area_id) {
+  $conn = get_db();
+  $res = null;
+
+  if ($area_id === null) {
+    $res = $conn->query("SELECT branch_id, branch_name FROM branch");
+  } else {
+    $res = $conn->query("SELECT branch_id, branch_name FROM branch WHERE area_id=$area_id");
+  }
+  return $res->fetch_all(MYSQLI_ASSOC);
+}
+
+function fetch_areas(?int $region_id) {
+  $conn = get_db();
+  $res = null;
+
+  if ($region_id === null) {
+    $res = $conn->query("SELECT area_id, area_name FROM areas");
+  } else {
+    $res = $conn->query("SELECT area_id, area_name FROM areas WHERE region_id=$region_id");
+  }
+  return $res->fetch_all(MYSQLI_ASSOC);
+}
+
+function fetch_regions() {
+  $conn = get_db();
+  $res = $conn->query("SELECT region_id, region_name FROM regions");
+  return $res->fetch_all(MYSQLI_ASSOC);
 }

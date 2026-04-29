@@ -4,9 +4,7 @@ $payload = require_once __DIR__ . '/../middleware/auth.php';
 
 include("../includes/styles.php");
 include("../lib/user.php");
-include('../middleware/auth.php');
-
-$conn = require_once __DIR__ . '../config/db.php';
+include('../lib/location_data.php');
 
 if (isset($_POST['submit'])) {
   $name = $_POST['name'];
@@ -14,7 +12,7 @@ if (isset($_POST['submit'])) {
   $phone = $_POST['phone'];
   $branch_id = $_POST['branch_id'];
 
-  create_user($conn, $name, $email, $phone, $branch_id);
+  create_user($email, $branch_id, ['user_name' => $name, 'user_phone' => $phone]);
   header("Location: ./");
   exit;
 }
@@ -50,9 +48,9 @@ if (isset($_POST['submit'])) {
           <select name="region_id" id="region" class="form-select" required>
             <option value="">Select Region</option>
             <?php
-            $regions = mysqli_query($conn, "SELECT * FROM regions");
-            while ($row = mysqli_fetch_assoc($regions)) {
-              echo "<option value='{$row['region_id']}'>{$row['region_name']}</option>";
+            $regions = fetch_regions();
+            foreach ($regions as $region) {
+              echo "<option value='{$region['region_id']}'>{$region['region_name']}</option>";
             }
             ?>
           </select>

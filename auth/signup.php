@@ -2,8 +2,6 @@
 include('../includes/styles.php');
 include('../lib/admin.php');
 
-$conn = require_once __DIR__ . '/../config/db.php';
-
 if (isset($_POST['submit'])) {
   $admin_name = $_POST['name'];
   $admin_email = $_POST['email'];
@@ -13,7 +11,7 @@ if (isset($_POST['submit'])) {
     die("Passwords do not match");
   }
 
-  create_new_admin($conn, $admin_name, $admin_email, $admin_pass);
+  create_new_admin($admin_name, $admin_email, $admin_pass);
 
   header('Location: login.php');
   exit;

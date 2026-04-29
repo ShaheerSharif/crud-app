@@ -1,11 +1,11 @@
 <?php
-include("../config/db.php");
+include('../lib/user.php');
 
 $email = $_POST['email'];
 
-$q = mysqli_query($conn, "SELECT user_email from users WHERE user_email='$email'");
+$id = email_exists($email);
 
-if ($q->num_rows > 0) {
+if ($id !== null) {
     echo json_encode([
         'exists' => true,
     ]);

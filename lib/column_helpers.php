@@ -1,6 +1,9 @@
 <?php
+include('../config/db.php');
+include('../config/aliases.php');
 
-function col_exists(mysqli $conn, string $table, string $col) {
+function col_exists(string $table, string $col) {
+  $conn = get_db();
   $q = $conn->query("SELECT COUNT(*) AS cnt
     FROM INFORMATION_SCHEMA.COLUMNS
     WHERE TABLE_SCHEMA = DATABASE()
@@ -13,7 +16,8 @@ function col_exists(mysqli $conn, string $table, string $col) {
   return $row && $row['cnt'] > 0;
 }
 
-function add_column(mysqli $conn, string $table, string $col, string $datatype='VARCHAR(255)', bool $nullable=true) {
+function add_column(string $table, string $col, string $datatype='VARCHAR(255)', bool $nullable=true) {
+  $conn = get_db();
   $col = $conn->real_escape_string($col);
 
   $null_sql = $nullable ? 'NULL' : 'NOT NULL';
@@ -21,14 +25,16 @@ function add_column(mysqli $conn, string $table, string $col, string $datatype='
   $conn->query("ALTER TABLE `$table` ADD COLUMN `$col` $datatype $null_sql");
 }
 
-function identify_relevant_table(mysqli $conn, string $col, array $aliasTable) {
+function identify_relevant_table(string $col) {
+  $aliasTable = get_aliases();
+
   foreach ($aliasTable as $table => $aliases) {
     foreach ($aliases as $a) {
       // check if column starts with alias
       if (strpos($col, $a) === 0) {
         return [
           'table' => $table,
-          'exists' => col_exists($conn, $table, $col),
+          'exists' => col_exists($table, $col),
         ];
       }
     }

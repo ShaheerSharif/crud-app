@@ -2,18 +2,15 @@
 
 require_once __DIR__ . '/../lib/jwt.php';
 
-$conn = require_once __DIR__ . '/../config/db.php';
-$jwt_config = require_once __DIR__ . '/../config/jwt.php';
-
 if (!isset($_COOKIE['token'])) {
   header('Location: ../auth/login.php');
   exit;
 }
 
-$payload = verify_jwt($conn, $jwt_config, $_COOKIE['token']);
+$payload = verify_jwt($_COOKIE['token']);
 
 if (!$payload) {
-  discard_jwt($conn);
+  discard_jwt();
   header('Location: ../auth/login.php');
   exit;
 }

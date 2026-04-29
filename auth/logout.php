@@ -1,7 +1,5 @@
 <?php
 include('../lib/jwt.php');
 
-$conn = require_once __DIR__ . '/../config/db.php';
-
-discard_jwt($conn);
+discard_jwt();
 header('Location: login.php');

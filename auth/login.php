@@ -3,15 +3,12 @@ include('../includes/styles.php');
 include('../lib/admin.php');
 include('../lib/jwt.php');
 
-$conn = require_once __DIR__ . '/../config/db.php';
-$jwt_config = require_once __DIR__ . '/../config/jwt.php';
-
 if (isset($_POST['submit'])) {
   $email = $_POST['email'];
   $pass = $_POST['password'];
   $remember = isset($_POST['remember']);
 
-  $admin = verify_admin($conn, $email, $pass);
+  $admin = verify_admin($email, $pass);
 
   if ($admin['status']) {
     $ttl = 3600; // 1 hr
@@ -20,7 +17,7 @@ if (isset($_POST['submit'])) {
       $ttl = 3600 * 24 * 30; // 30 days
     }
 
-    $jwt = gen_jwt($conn, $jwt_config, $admin['admin_id'], $ttl);
+    $jwt = gen_jwt($admin['admin_id'], $ttl);
 
     header('Location: ../users');
     exit;

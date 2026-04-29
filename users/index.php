@@ -3,26 +3,11 @@
 $payload = require_once __DIR__ . '/../middleware/auth.php';
 
 include("../includes/styles.php");
-include('../middleware/auth.php');
-
-$conn = require_once __DIR__ . '/../config/db.php';
+include('../lib/user.php');
 
 $adminName = 'example';
 
-$result = mysqli_query($conn, "SELECT
-    users.user_id,
-    users.user_name,
-    users.user_email,
-    users.user_phone,
-    branches.branch_name,
-    areas.area_name,
-    regions.region_name 
-  FROM users
-  INNER JOIN branches ON branches.branch_id=users.branch_id
-  INNER JOIN areas ON areas.area_id=branches.area_id
-  INNER JOIN regions ON regions.region_id=areas.region_id
-  WHERE users.user_isactive=1
-");
+$rows = fetch_all_active_users();
 ?>
 
 <link href="./styles/index.css" rel="stylesheet">
@@ -75,8 +60,8 @@ $result = mysqli_query($conn, "SELECT
 
       <tbody>
         <?php
-        if ($result->num_rows !== 0) {
-          while($row = $result->fetch_assoc()) {
+        if (count($rows) !== 0) {
+          foreach($rows as $row) {
         ?>
           <tr>
             <td><?= htmlspecialchars($row['user_name']) ?></td>

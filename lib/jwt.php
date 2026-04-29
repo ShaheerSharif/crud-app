@@ -1,10 +1,15 @@
 <?php
+include('../config/db.php');
+include('../config/jwt.php');
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Ramsey\Uuid\Uuid;
 
-function gen_jwt(mysqli $conn, array $jwt_config, int $admin_id, int $ttl = 3600): string {
+function gen_jwt(int $admin_id, int $ttl = 3600): string {
+  $conn = get_db();
+  $jwt_config = get_jwt_config();
+
   $jti = Uuid::uuid4()->toString();
   $iat = time();
   $exp = $iat + $ttl;
@@ -45,7 +50,10 @@ function gen_jwt(mysqli $conn, array $jwt_config, int $admin_id, int $ttl = 3600
   return $jwt;
 }
 
-function verify_jwt(mysqli $conn, array $jwt_config, string $jwt): ?array {
+function verify_jwt(string $jwt): ?array {
+  $conn = get_db();
+  $jwt_config = get_jwt_config();
+
   $signing_key = $jwt_config['secret'];
 
   if (!$signing_key) return null;
@@ -88,7 +96,9 @@ function verify_jwt(mysqli $conn, array $jwt_config, string $jwt): ?array {
   return $decoded_payload;
 }
 
-function discard_jwt(mysqli $conn) {
+function discard_jwt() {
+  $conn = get_db();
+
   if (!isset($_COOKIE['token'])) return;
   
   // decode the raw JWT string first
