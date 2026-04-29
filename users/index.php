@@ -3,10 +3,12 @@
 $payload = require_once __DIR__ . '/../middleware/auth.php';
 
 require_once __DIR__ . '/../lib/user.php';
+require_once __DIR__ . '/../lib/admin.php';
 
 include("../includes/styles.php");
 
-$adminName = 'example';
+$admin_id = $payload['sub'];
+$adminName = fetch_admin_name($admin_id);
 
 $rows = fetch_all_active_users();
 ?>

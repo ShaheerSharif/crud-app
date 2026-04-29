@@ -32,3 +32,14 @@ function verify_admin(string $admin_email, string $admin_pass) {
     'status' => password_verify($admin_pass, $admin['admin_pass'])
   ];
 }
+
+function fetch_admin_name(int $admin_id) {
+  $conn = get_db();
+  $q = $conn->query("SELECT admin_name FROM admins WHERE admin_id=$admin_id");
+
+  if ($q->num_rows === 0) return null;
+
+  $admin = $q->fetch_assoc();
+
+  return $admin['admin_name'];
+}
