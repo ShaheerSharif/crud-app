@@ -1,6 +1,8 @@
 <?php
 
-require_once '../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$jwt_config = require_once __DIR__ . '/../config/jwt.php';
 
 use Ramsey\Uuid\Uuid;
 
@@ -9,7 +11,7 @@ function gen_jwt($conn, int $admin_id, int $ttl = 3600): string {
   $iat = time();
   $exp = $iat + $ttl;
 
-  $signing_key = getenv('JWT_SECRET');
+  $signing_key = $jwt_config['secret'];
   $header = [
     'alg' => 'HS512',
     'typ' => 'JWT'
