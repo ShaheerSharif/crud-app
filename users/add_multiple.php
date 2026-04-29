@@ -130,7 +130,7 @@ if (isset($_POST['submit'])) {
     if ($region_id) update_optional_region_fields($region_id, $row);
   }
 
-  header("Location: ./");
+  header("Location: /crud-app/users");
   exit;
 }
 ?>

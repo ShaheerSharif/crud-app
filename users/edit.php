@@ -17,7 +17,7 @@ if (isset($_POST['submit'])) {
   $branch_id = $_POST['branch_id'];
 
   update_user($id, $branch_id, ['user_name' => $name, 'user_email' => $email, 'user_phone' => $phone]);
-  header("Location: ./");
+  header("Location: /crud-app/users");
   exit;
 }
 ?>

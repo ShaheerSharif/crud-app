@@ -8,5 +8,5 @@ $id = $_GET['user_id'];
 
 delete_user($id);
 
-header("Location: ./");
+header("Location: /crud-app/users");
 exit;

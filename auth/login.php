@@ -22,7 +22,7 @@ if (isset($_POST['submit'])) {
 
     $jwt = gen_jwt($admin['admin_id'], $ttl);
 
-    header('Location: ../users');
+    header('Location: /crud-app/users');
     exit;
   } else {
     echo "<script>alert('Login Failed.');</script>";

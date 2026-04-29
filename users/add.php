@@ -14,7 +14,7 @@ if (isset($_POST['submit'])) {
   $branch_id = $_POST['branch_id'];
 
   create_user($email, $branch_id, ['user_name' => $name, 'user_phone' => $phone]);
-  header("Location: ./");
+  header("Location: /crud-app/users");
   exit;
 }
 ?>
