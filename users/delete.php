@@ -1,9 +1,8 @@
 <?php
-include('../middleware/auth.php');
 
-$conn = require_once '../config/db.php';
+$payload = require_once __DIR__ . '/../middleware/auth.php';
 
-require_auth($conn);
+$conn = require_once __DIR__ . '/../config/db.php';
 
 $id = $_GET['user_id'];
 

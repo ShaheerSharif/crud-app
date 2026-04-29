@@ -1,21 +1,21 @@
 <?php
-include('../lib/jwt.php');
 
-function require_auth(mysqli $conn) {
-  $token = $_COOKIE['token'];
+require_once __DIR__ . '/../lib/jwt.php';
 
-  if (!$token) {
-    header('Location: ../auth/login.php');
-    exit;
-  }
+$conn = require_once __DIR__ . '/../config/db.php';
+$jwt_config = require_once __DIR__ . '/../config/jwt.php';
 
-  $payload = verify_jwt($conn, $token);
+if (!isset($_COOKIE['token'])) {
+  header('Location: ../auth/login.php');
+  exit;
+}
 
-  if (!$payload) {
-    discard_jwt($conn);
-    header('Location: ../auth/login.php');
-    exit;
-  }
+$payload = verify_jwt($conn, $jwt_config, $_COOKIE['token']);
 
-  return $payload;
-} 
+if (!$payload) {
+  discard_jwt($conn);
+  header('Location: ../auth/login.php');
+  exit;
+}
+
+return $payload;

@@ -45,8 +45,8 @@ function gen_jwt(mysqli $conn, array $jwt_config, int $admin_id, int $ttl = 3600
   return $jwt;
 }
 
-function verify_jwt(mysqli $conn, string $jwt): ?array {
-  $signing_key = getenv('JWT_SECRET');
+function verify_jwt(mysqli $conn, array $jwt_config, string $jwt): ?array {
+  $signing_key = $jwt_config['secret'];
 
   if (!$signing_key) return null;
 
@@ -89,13 +89,21 @@ function verify_jwt(mysqli $conn, string $jwt): ?array {
 }
 
 function discard_jwt(mysqli $conn) {
-  $decoded_payload = $_COOKIE['token'];
+  if (!isset($_COOKIE['token'])) return;
+  
+  // decode the raw JWT string first
+  $parts = explode('.', $_COOKIE['token']);
+  if (count($parts) === 3) {
+    $decoded_payload = json_decode(base64_url_decode($parts[1]), true);
+    if ($decoded_payload && isset($decoded_payload['jti'])) {
+      $jti = $decoded_payload['jti'];
+      $stmt = $conn->prepare("UPDATE auth_tokens SET auth_token_revoked_at=NOW() WHERE auth_token_jti=?");
+      $stmt->bind_param("s", $jti);
+      $stmt->execute();
+    }
+  }
+
   setcookie('token', '', time() - (3600 * 24 * 30), '/');
-
-  $jti = $decoded_payload['jti'];
-  $revoked_timestamp = time();
-  $conn->query("UPDATE auth_tokens SET auth_token_revoked_at='$revoked_timestamp' WHERE auth_token_jti='$jti'");
-
   unset($_COOKIE['token']);
 }
 
