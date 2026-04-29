@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../middleware/autologin.php';
+
 require_once __DIR__ . '/../lib/admin.php';
 require_once __DIR__ . '/../lib/jwt.php';
 
