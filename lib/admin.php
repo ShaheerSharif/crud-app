@@ -20,7 +20,7 @@ function verify_admin(mysqli $conn, string $admin_email, string $admin_pass) {
     LIMIT 1
   ");
 
-  if ($q->num_rows === 0) return false;
+  if ($q->num_rows === 0) return [ 'admin_id' => null, 'status' => false ];
 
   $admin = $q->fetch_assoc();
 

@@ -3,7 +3,7 @@ include('../includes/styles.php');
 include('../lib/admin.php');
 include('../lib/jwt.php');
 
-$conn = require_once __DIR__ . '../config/db.php';
+$conn = require_once __DIR__ . '/../config/db.php';
 $jwt_config = require_once __DIR__ . '/../config/jwt.php';
 
 if (isset($_POST['submit'])) {
