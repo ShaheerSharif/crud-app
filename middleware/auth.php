@@ -1,12 +1,12 @@
 <?php
 require_once __DIR__ . '/../lib/jwt.php';
 
-if (!isset($_COOKIE['token'])) {
+if (!token_exists_locally()) {
   header('Location: /crud-app/auth/login.php');
   exit;
 }
 
-$payload = verify_jwt($_COOKIE['token']);
+$payload = verify_jwt();
 
 if (!$payload) {
   discard_jwt();

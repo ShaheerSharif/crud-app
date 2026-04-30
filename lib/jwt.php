@@ -5,6 +5,8 @@ require_once __DIR__ . '/../config/jwt.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Ramsey\Uuid\Uuid;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 function gen_jwt(int $admin_id, int $ttl = 3600): string {
   $conn = get_db();
@@ -14,21 +16,14 @@ function gen_jwt(int $admin_id, int $ttl = 3600): string {
   $iat = time();
   $exp = $iat + $ttl;
 
-  $signing_key = $jwt_config['secret'];
-  $header = [
-    'alg' => 'HS512',
-    'typ' => 'JWT'
-  ];
-  $header = base64_url_encode(json_encode($header, JSON_THROW_ON_ERROR));
   $payload = [
     'jti' => $jti,
     'sub' => $admin_id,
     'iat' => $iat,
     'exp' => $exp,
   ];
-  $payload = base64_url_encode(json_encode($payload, JSON_THROW_ON_ERROR));
-  $signature = base64_url_encode(hash_hmac('sha512', "$header.$payload", $signing_key, true));
-  $jwt = "$header.$payload.$signature";
+
+  $jwt = JWT::encode($payload, $jwt_config['secret'], 'HS256');
 
   $token_exp = $exp - 180; // cookie expires 3 mins before token
 
@@ -50,30 +45,16 @@ function gen_jwt(int $admin_id, int $ttl = 3600): string {
   return $jwt;
 }
 
-function verify_jwt(string $jwt): ?array {
+function verify_jwt(): ?array {
+  if (!token_exists_locally()) return null;
+
   $conn = get_db();
   $jwt_config = get_jwt_config();
 
+  $jwt = $_COOKIE['token'];
   $signing_key = $jwt_config['secret'];
-
-  if (!$signing_key) return null;
-
-  $parts = explode('.', $jwt);
-
-  if (count($parts) !== 3) return null;
-
-  [$header, $payload, $signature] = $parts;
-
-  $valid_signature = base64_url_encode(
-    hash_hmac('sha512', "$header.$payload", $signing_key, true)
-  );
-
-  if (!hash_equals($valid_signature, $signature)) return null;
-
-  $decoded_payload = json_decode(
-    base64_url_decode($payload),
-    true,
-  );
+  $decoded = JWT::decode($jwt, new Key($signing_key, 'HS256'));
+  $decoded_payload = (array) $decoded;
 
   if (!$decoded_payload) return null;
 
@@ -100,7 +81,7 @@ function verify_jwt(string $jwt): ?array {
 function discard_jwt() {
   $conn = get_db();
 
-  if (!isset($_COOKIE['token'])) return;
+  if (!token_exists_locally()) return;
   
   // decode the raw JWT string first
   $parts = explode('.', $_COOKIE['token']);
@@ -116,6 +97,10 @@ function discard_jwt() {
 
   setcookie('token', '', time() - (3600 * 24 * 30), '/');
   unset($_COOKIE['token']);
+}
+
+function token_exists_locally() {
+  return isset($_COOKIE['token']);
 }
 
 function base64_url_encode(string $text): string {

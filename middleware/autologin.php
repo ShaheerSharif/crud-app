@@ -1,11 +1,9 @@
 <?php
 require_once __DIR__ . '/../lib/jwt.php';
 
-if (!isset($_COOKIE['token'])) {
-  return;
-}
+if (!token_exists_locally()) return;
 
-$payload = verify_jwt($_COOKIE['token']);
+$payload = verify_jwt();
 
 if (!$payload) {
   discard_jwt();
