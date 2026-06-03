@@ -49,7 +49,7 @@ CREATE TABLE `areas` (
 
 CREATE TABLE `auth_tokens` (
     `auth_token_id` int(11) NOT NULL,
-    `auth_token_jti` varchar(32) NOT NULL,
+    `auth_token_jti` varchar(36) NOT NULL,
     `auth_token_created_at` datetime NOT NULL DEFAULT current_timestamp(),
     `auth_token_expires_at` datetime NOT NULL,
     `auth_token_revoked_at` datetime DEFAULT NULL,
@@ -83,6 +83,7 @@ CREATE TABLE `users` (
     `user_id` int(11) NOT NULL,
     `user_email` varchar(50) NOT NULL,
     `user_name` varchar(50) DEFAULT NULL,
+    `user_phone` varchar(20) DEFAULT NULL,
     `user_isactive` tinyint(4) DEFAULT 1,
     `branch_id` int(11) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1 COLLATE = latin1_swedish_ci;

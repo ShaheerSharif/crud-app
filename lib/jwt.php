@@ -54,12 +54,22 @@ function verify_jwt(): ?array {
 
   $jwt = $_COOKIE['token'];
   $signing_key = $jwt_config['secret'];
-  $decoded = JWT::decode($jwt, new Key($signing_key, 'HS256'));
+
+  try {
+    $decoded = JWT::decode($jwt, new Key($signing_key, 'HS256'));
+  } catch (\Exception $e) {
+    error_log('JWT decode failed: ' . $e->getMessage());
+    return null;
+  }
+
   $decoded_payload = (array) $decoded;
 
   if (!$decoded_payload) return null;
 
-  if (isset($decoded_payload['exp']) && time() >= $decoded_payload['exp']) return null;
+  if (isset($decoded_payload['exp']) && time() >= $decoded_payload['exp']) {
+    error_log('JWT expired');
+    return null;
+  }
 
   $jti = $decoded_payload['jti'];
 
@@ -74,7 +84,11 @@ function verify_jwt(): ?array {
   $stmt->execute();
 
   $row = $stmt->get_result()->fetch_assoc();
-  if ($row['cnt'] < 1) return null;
+
+  if ($row['cnt'] < 1) {
+    error_log('JWT jti not found in DB or revoked: ' . $jti);
+    return null;
+  }
 
   return $decoded_payload;
 }

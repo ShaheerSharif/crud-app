@@ -1,6 +1,8 @@
 <?php
 
-$payload = require_once __DIR__ . '/../middleware/auth.php';
+require_once __DIR__ . '/../middleware/auth.php';
+
+$payload = require_auth();
 
 require_once __DIR__ . '/../lib/column_helpers.php';
 require_once __DIR__ . '/../lib/csv_helpers.php';
