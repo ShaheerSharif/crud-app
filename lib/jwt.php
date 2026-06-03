@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/jwt.php';
+require_once __DIR__ . '/../config/app_env.php';
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -31,7 +32,7 @@ function gen_jwt(int $admin_id, int $ttl = 3600): string {
     'expires' => $token_exp,
     'path' => '/',
     'httponly' => true,
-    'secure' => true,
+    'secure' => get_app_env() === 'prod',
     'samesite' => 'Strict',
   ]);
 
